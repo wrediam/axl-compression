@@ -45,10 +45,19 @@ ollama pull qwen3:8b
 
 ### For Cloud Testing (OpenRouter)
 
-Get an API key from [OpenRouter](https://openrouter.ai/keys) and set it:
+1. Get an API key from [OpenRouter](https://openrouter.ai/keys)
+
+2. Create a `.env` file in the project directory:
 ```bash
-export OPENROUTER_API_KEY='your-key-here'
+cp .env.example .env
 ```
+
+3. Edit `.env` and add your API key:
+```
+OPENROUTER_API_KEY=your-api-key-here
+```
+
+The script will automatically load your API key from the `.env` file.
 
 ## Usage
 

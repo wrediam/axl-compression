@@ -39,3 +39,7 @@ Thumbs.db
 # Test outputs
 test_output/
 *.log
+
+# Environment variables (API keys)
+.env
+.env.local
