@@ -33,22 +33,45 @@ Tested with Qwen3:8B on 10-message conversations:
 ## Installation
 
 ```bash
-pip install ollama tiktoken
+pip install -r requirements.txt
 ```
+
+### For Local Testing (Ollama)
 
 Requires Ollama running locally with a model installed:
 ```bash
 ollama pull qwen3:8b
 ```
 
+### For Cloud Testing (OpenRouter)
+
+Get an API key from [OpenRouter](https://openrouter.ai/keys) and set it:
+```bash
+export OPENROUTER_API_KEY='your-key-here'
+```
+
 ## Usage
 
-Run the test suite:
+### Test with Local Models (Ollama)
+
 ```bash
 python3 axl_compression.py
 ```
 
-The script will:
+### Test with Cloud Models (OpenRouter)
+
+```bash
+python3 axl_openrouter.py
+```
+
+Select from models including:
+- GPT-4 Turbo
+- Claude 3.5 Sonnet
+- Gemini Pro 1.5
+- Llama 3.1 70B
+- And more
+
+Both scripts will:
 1. Warm up the model
 2. Run 10 test messages with AXL compression
 3. Run the same messages without compression
