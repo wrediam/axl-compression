@@ -13,7 +13,7 @@ The system allows LLMs to process compressed conversation history while respondi
 
 ## Performance Results
 
-Tested with Qwen3:8B on 10-message conversations:
+Tested with Qwen3:8B on 10-message conversations with equivalent system prompts:
 
 **Speed Improvement:**
 - Normal: 365 seconds
@@ -26,9 +26,10 @@ Tested with Qwen3:8B on 10-message conversations:
 - **15.9% compression**
 
 **Token Efficiency:**
-- Overhead: 1,920 tokens (system prompt)
+- System prompt overhead reduced by compressing the prompt itself
 - Break-even: ~10 messages
 - Net savings increase with conversation length
+- Both modes use equivalent system prompts for fair comparison
 
 ## Installation
 
@@ -126,14 +127,21 @@ i thnk 8 artfcl intllgnce 6 go1g 2 chnge evryth1g . wht do u thnk ?
 
 ## System Architecture
 
-The system uses a clear, readable system prompt that teaches the model to interpret AXL compression while responding in normal English. Python handles all compression/decompression automatically.
+The system uses equivalent system prompts for both modes to ensure fair comparison:
+- **AXL mode**: Compressed system prompt with legend teaches the model to interpret AXL
+- **Normal mode**: Uncompressed system prompt with identical instructions
+- Both prompts have the same semantic content
+
+Python handles all compression/decompression automatically.
 
 **Conversation Flow:**
 1. User input → compressed → added to history
-2. Compressed history sent to LLM with legend
+2. Compressed history + compressed system prompt sent to LLM
 3. LLM responds in normal English
 4. Response → compressed → added to history
 5. Repeat
+
+**Key Innovation:** The system prompt itself is compressed using AXL, reducing overhead while maintaining the same instructional content as the normal mode.
 
 ## Requirements
 

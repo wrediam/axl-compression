@@ -70,23 +70,41 @@ class AXLCompressor:
         self.all_codes = {**self.number_codes, **self.letter_codes}
         self.reverse_codes = {v: k for k, v in self.all_codes.items()}
         
-        # Ultra-minimal system prompt
+        # System prompts
         self.system_prompt = self._generate_system_prompt()
+        self.normal_system_prompt = self._generate_normal_system_prompt()
     
     def _generate_system_prompt(self) -> str:
-        """Clear system prompt teaching AXL - readable for the model."""
-        # Build compact legend but keep instructions clear
+        """AXL system prompt - compressed version with legend."""
         num_legend = " ".join([f"{v}={k}" for k, v in self.number_codes.items()])
         let_legend = " ".join([f"{v}={k}" for k, v in self.letter_codes.items()])
         sfx_legend = " ".join([f"{v}={k}" for k, v in self.suffix_codes.items()])
         
-        return f"""The conversation history below uses AXL compression to save tokens:
-- Number codes: {num_legend}
-- Letter codes: {let_legend}
-- Suffix codes: {sfx_legend}
-- Vowels removed from most words (first/last letters kept)
+        return f"""u r a hlpfl AI assstnt. 1 cnvrsa5n hstry blw uss AXL cmprs5n 2 sve tkns:
+- Nmbr cds: {num_legend}
+- Lttr cds: {let_legend}
+- Sfx cds: {sfx_legend}
+- Vwls rmvd frm mst wrds (frst/lst lttrs kpt)
 
-Read the compressed history, understand it, then respond in normal, clear, uncompressed English."""
+Yr tsk 6 2:
+- Rd 3 undrstnd 1 cmplte cnvrsa5n hstry
+- Mntn cntxt frm prvs exchngs
+- Prvde clr, accrt, 3 hlpfl rspnss
+- Rspnd 9 ntrl, cnvrstnl Eng7sh
+
+Fcs on be1g infrm8ve whle mntn1g a frnd7y 3 prfsnl tne."""
+    
+    def _generate_normal_system_prompt(self) -> str:
+        """Equivalent system prompt for normal (uncompressed) mode - same content as compressed but readable."""
+        return """You are a helpful AI assistant. The conversation history below contains the full dialogue between the user and assistant.
+
+Your task is to:
+- Read and understand the complete conversation history
+- Maintain context from previous exchanges
+- Provide clear, accurate, and helpful responses
+- Respond in natural, conversational English
+
+Focus on being informative while maintaining a friendly and professional tone."""
     
     def _remove_vowels(self, word: str) -> str:
         """Rule 2: Remove internal vowels, keep first and last letters."""
@@ -281,7 +299,7 @@ class AXLCompressionSession:
             system_prompt = self.compressor.system_prompt
             full_prompt = f"{conversation_context}"
         else:
-            system_prompt = "You are a helpful AI assistant."
+            system_prompt = self.compressor.normal_system_prompt
             full_prompt = conversation_context
         
         # Count tokens
@@ -292,10 +310,10 @@ class AXLCompressionSession:
         # Calculate normal (uncompressed) equivalent
         if self.use_compression:
             normal_context = "\n".join([
-                f"{'User' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
+                f"{'User' if msg['role'] == 'user' else 'Assistant'}: {self.compressor.decompress_text(msg['content'])}"
                 for msg in self.history
             ])
-            normal_system = "You are a helpful AI assistant."
+            normal_system = self.compressor.normal_system_prompt
             normal_tokens = self.token_counter.count(normal_system + normal_context)
         else:
             normal_tokens = total_tokens_this_turn
