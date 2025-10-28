@@ -1,6 +1,8 @@
 # AXL: AlphaNumeric Text Accelerator
 
-A conversation compression system for Large Language Models that reduces token usage and improves inference speed through aggressive text compression.
+An experimental conversation compression system for Large Language Models that explores token reduction and inference speed improvements through aggressive text compression.
+
+**Note:** This is a research experiment exploring compression techniques for LLM conversations. Results vary significantly by model - some tokenizers handle compressed text more efficiently than others. Qwen3:8B showed strong results (20% speed improvement), while Claude 3.5 Sonnet showed overhead penalties. Your mileage may vary.
 
 ## Overview
 
@@ -160,10 +162,11 @@ The test script includes:
 
 ## Limitations
 
-- System prompt overhead: ~1,920 tokens
+- System prompt overhead varies by model
 - Compression is lossy (cannot perfectly reconstruct original)
 - Requires ~10+ messages to achieve net token savings
 - Best suited for long conversations
+- **Model-dependent performance**: Effectiveness varies significantly based on the model's tokenizer. Some models (like Qwen3:8B) show strong benefits, while others (like Claude 3.5 Sonnet) may have overhead penalties due to how they tokenize compressed text.
 
 ## Future Work
 
