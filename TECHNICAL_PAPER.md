@@ -316,7 +316,7 @@ Future work should focus on reducing system prompt overhead and exploring semant
 ## 10. References
 
 ### Code Repository
-https://github.com/wrediam/legendmem
+https://github.com/wrediam/axl-compression
 
 ### Related Work
 - Transformer attention mechanisms and computational complexity
